@@ -1,0 +1,1 @@
+.\GetBackupFolderStats.exe & .\GetCaseStatsFromInternal.exe
