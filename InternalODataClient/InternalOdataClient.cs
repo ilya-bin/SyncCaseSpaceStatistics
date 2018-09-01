@@ -8,7 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Acumatica.Support.Programs.SyncCaseSpaceStatistics.InternalODataClient
+namespace Acumatica.Support.Integration.Internal.OData
 {
     // TODO Free from tight coupling with DbEntities
     public class InternalOdataClient
@@ -63,6 +63,53 @@ namespace Acumatica.Support.Programs.SyncCaseSpaceStatistics.InternalODataClient
             return result.ToList();
         }
 
+        public async Task<List<CaseDTO>> GetAllNewCasesAsync()
+        {
+            var client = new ODataClient(_oDataClientSettings);
+            var result = await client
+                .For<CaseDTO>()
+                .Filter(c => c.Status == "New")
+                .Select(c => c.CaseID)
+                .Select(c => c.Status)
+                .Select(c => c.ClosingDate)
+                .Select(c => c.LastModifiedOn)
+                .Select(c => c.Owner)
+                .Select(c => c.OwnerName)
+                .Select(c => c.SecondaryOwner)
+                .Select(c => c.Subject)
+                .Select(c => c.Severity)
+                .Select(c => c.Priority)
+                .Select(c => c.DateReported)
+                .FindEntriesAsync();
+            return result.ToList();
+        }
+
+        public async Task<List<CaseDTO>> GetCasesTodayAsync()
+        {
+            var client = new ODataClient(_oDataClientSettings);
+            var result = await client
+                .For<CaseDTO>()
+                .Filter(c => (c.DateReported >= DateTime.Today 
+                    || c.LastIncomingActivity >= DateTime.Today)
+                    && c.ClassID == "PARTNERREQ")
+                .Select(c => c.CaseID)
+                .Select(c => c.Status)
+                .Select(c => c.Reason)
+                .Select(c => c.ClosingDate)
+                .Select(c => c.LastModifiedOn)
+                .Select(c => c.Owner)
+                .Select(c => c.OwnerName)
+                .Select(c => c.SecondaryOwner)
+                .Select(c => c.Subject)
+                .Select(c => c.Severity)
+                .Select(c => c.Priority)
+                .Select(c => c.DateReported)
+                .Select(c => c.LastIncomingActivity)
+                .Select(c => c.ClassID)
+                .FindEntriesAsync();
+            return result.ToList();
+        }
+
         private class InternalCasesMatchResolver : INameMatchResolver
         {
 
@@ -72,7 +119,8 @@ namespace Acumatica.Support.Programs.SyncCaseSpaceStatistics.InternalODataClient
                 requestedName = requestedName.Split('.').Last();
 
                 return actualName == requestedName ||
-                       (actualName == "CR-Cases" && requestedName == "Case");
+                       (actualName == "CR-Cases" && requestedName == "Case")
+                       || (actualName == "CR-Cases" && requestedName == "CaseDTO");
             }
         }
     }

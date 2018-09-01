@@ -1,12 +1,6 @@
-﻿using Acumatica.Support.Programs.SyncCaseSpaceStatistics.DbEntities;
-using Acumatica.Support.Programs.SyncCaseSpaceStatistics.InternalODataClient;
-using Simple.OData.Client;
+﻿using Acumatica.Support.Integration.Internal.OData;
+using Acumatica.Support.Programs.SyncCaseSpaceStatistics.DbEntities;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace Acumatica.Support.Programs.GetCaseStatsFromInternal
