@@ -2,13 +2,12 @@
 using Acumatica.Support.Programs.SyncCaseSpaceStatistics.DbEntities;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Acumatica.Support.Programs.GetBackupFolderStats
 {
     class Program
     {
-        static Task Main(string[] args)
+        static void Main(string[] args)
         {
             var backupFolders = BackupFoldersPool.BackupFolders;
 

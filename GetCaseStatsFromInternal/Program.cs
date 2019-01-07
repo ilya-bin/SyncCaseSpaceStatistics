@@ -10,20 +10,26 @@ namespace Acumatica.Support.Programs.GetCaseStatsFromInternal
         static async Task Main(string[] args)
         {
             var currentTime = DateTime.Now;
+            // TODO unhardcode SQL server names
+            string conStringName = "SQL5";
             // Get cases from internal
             var internalClient = new InternalOdataClient();
             var cases = await internalClient.GetAllCasesFromInternalGIAsync();
 
             // update database
-            using (var db = new DbSpacesContext())
+            for (int i = 0; i < 2; i++)
             {
-                db.Database.ExecuteSqlCommand("DELETE [Cases]");
-
-                
-                cases.ForEach(c => c.SyncDateTime = currentTime);
-                db.Cases.AddRange(cases);
-                db.SaveChanges();
+                using (var db = new DbSpacesContext(conStringName))
+                {
+                    db.Database.ExecuteSqlCommand("DELETE [Cases]");
+                    
+                    cases.ForEach(c => c.SyncDateTime = currentTime);
+                    db.Cases.AddRange(cases);
+                    db.SaveChanges();
+                }
+                conStringName = "SQL6";
             }
+            
         }       
     }
 }

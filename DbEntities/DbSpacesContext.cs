@@ -9,6 +9,11 @@ namespace Acumatica.Support.Programs.SyncCaseSpaceStatistics.DbEntities
         {
         }
 
+        public DbSpacesContext(string configConnectionString) 
+            : base($"name={configConnectionString}")
+        {
+        }
+
         public virtual DbSet<Case> Cases { get; set; }
         public virtual DbSet<BackupFoldersDetail> BackupFoldersDetails { get; set; }
 
